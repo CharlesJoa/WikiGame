@@ -18,7 +18,10 @@ def recherche(arg): # Je crée la fonction
             
         for anchor in soup.find_all('div', {"class":"mw-parser-output"}):
             for toto in anchor.find_all('a'):
-                links.append(toto.get('href'))
+                titi = str(toto.get('href'))
+                if not ('/w/') in titi:
+                    links.append(titi)
+                        
         return links
 
 try :
