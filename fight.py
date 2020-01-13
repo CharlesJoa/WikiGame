@@ -8,20 +8,25 @@ import urllib.request
 import sys
 
 def recherche(arg): # Je crée la fonction
-    with urllib.request.urlopen('https://www.ecosia.org/search?q={}'.format(arg)) as response:
+    links = []
+    with urllib.request.urlopen(arg) as response:
         webpage = response.read() #Crée une chaine de caractère avec tout le code source
         soup = BeautifulSoup(webpage, 'html.parser')
-        for anchor in soup.find_all("span",{"class":"result-count"}):
-            return int(anchor.contents[0].replace("\n","").replace("\r","").replace(" ","").replace(",",""))
-    
+        for toto in soup.find_all('h1', {"class":"firstHeading"}): #get the title of the page
+            title = str(toto.contents[0])
+            print(title.replace("<i>", "").replace("</i>", ""))
+            
+        for anchor in soup.find_all('div', {"class":"mw-parser-output"}):
+            for toto in anchor.find_all('a'):
+                links.append(toto.get('href'))
+        return links
+
 try :
-    r1 = recherche(sys.argv[1].replace(" ","%20").replace("'","%27")) #formatage des espaces et ' pour la recherche
-    r2 = recherche(sys.argv[2].replace(" ","%20").replace("'","%27"))
+    r1 = recherche('https://fr.wikipedia.org/wiki/Les_Vacances_de_monsieur_Hulot')
+    # r2 = recherche('https://fr.wikipedia.org/wiki/Sp%C3%A9cial:Page_au_hasard')
 except:
     print('Saisir correctement les parametres')
     exit(1)
 
-if(r1>r2):
-    print("{} gagne ({:03.1f}%)".format(sys.argv[1].replace("%20"," ").replace("%27","'"),(r1/(r1+r2)*100))) #deformatage SPACE et '
-else:
-    print("{} gagne ({:03.1f}%)".format(sys.argv[2].replace("%20"," ").replace("%27","'"),(r2/(r1+r2)*100)))
+print(r1)
+# print(r2)
