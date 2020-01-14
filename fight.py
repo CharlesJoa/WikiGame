@@ -33,13 +33,15 @@ def recherche(arg): # Je crée la fonction
 def afficheTableau(tab,deb,fin):
     i=1
     for indice in range(deb,fin):
+
         print('{} - {}'.format(indice,tab[indice]))
+
         i+=1
 
 try :
     success = False
     r = recherche('https://fr.wikipedia.org/wiki/Les_Vacances_de_monsieur_Hulot')
-    print(len(r))
+    tour = 0
     page=1
     
     while not success:
@@ -48,7 +50,7 @@ try :
         print('************************ WikiGame **** tour {}'.format(tour))
         print('Actuellement : {}'.format(r[0]))
         print('00 - Retour /')
-        afficheTableau(r,deb,fin)
+        afficheTableau(r,max(1,deb),min(fin, len(r)))
         print('98 - Voir les liens précédents /')
         print('99 - Voir la suite /')
         nvpage = int(input('Votre choix : '))
@@ -56,10 +58,12 @@ try :
             # do retour
             i=0
         elif nvpage == 99:
-            if not fin > len(r):
+            if fin<len(r):
                 page+=1
         elif nvpage == 98:
-            page-=1
+            if deb >1:
+                page-=1
+
         else:
             rn = recherche('https://fr.wikipedia.org/wiki/{}'.format(r[nvpage]))
             tour+=1
