@@ -40,7 +40,6 @@ try :
     success = False
     r = recherche('https://fr.wikipedia.org/wiki/Les_Vacances_de_monsieur_Hulot')
     print(len(r))
-    tour = 0
     page=1
     
     while not success:
@@ -57,7 +56,8 @@ try :
             # do retour
             i=0
         elif nvpage == 99:
-            page+=1
+            if not fin > len(r):
+                page+=1
         elif nvpage == 98:
             page-=1
         else:
