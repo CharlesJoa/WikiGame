@@ -40,14 +40,22 @@ def afficheTableau(tab,deb,fin):
 
 try :
     success = False
-    r = recherche('https://fr.wikipedia.org/wiki/Les_Vacances_de_monsieur_Hulot')
+    r = recherche('https://fr.wikipedia.org/wiki/Sp%C3%A9cial:Page_au_hasard')
+    origine = r[0]
+    r2 = recherche('https://fr.wikipedia.org/wiki/Sp%C3%A9cial:Page_au_hasard')
     tour = 0
     page=1
     
     while not success:
+        if r[0] == r2[0]:
+            success=True
+            print('Bravo tu as reussi en {}'.format(tour))
+
         deb = ((page-1)*20)+1
         fin=deb+20
         print('************************ WikiGame **** tour {}'.format(tour))
+        print('Départ :{}'.format(origine))
+        print('Cible : {}'.format(r2[0]))
         print('Actuellement : {}'.format(r[0]))
         print('00 - Retour /')
         afficheTableau(r,max(1,deb),min(fin, len(r)))
@@ -55,7 +63,7 @@ try :
         print('99 - Voir la suite /')
         nvpage = int(input('Votre choix : '))
         if nvpage == 0:
-            # do retour
+            r = recherche('https://fr.wikipedia.org/wiki/{}'.format(r[old]))
             i=0
         elif nvpage == 99:
             if fin<len(r):
@@ -65,12 +73,12 @@ try :
                 page-=1
 
         else:
-            rn = recherche('https://fr.wikipedia.org/wiki/{}'.format(r[nvpage]))
+            old = r[0]
+            r = recherche('https://fr.wikipedia.org/wiki/{}'.format(r[nvpage]))
             tour+=1
         
     # afficheTableau(recherche('https://fr.wikipedia.org/wiki/Les_Vacances_de_monsieur_Hulot'))
     # r1 = recherche('https://fr.wikipedia.org/wiki/Les_Vacances_de_monsieur_Hulot')
-    # r2 = recherche('https://fr.wikipedia.org/wiki/Sp%C3%A9cial:Page_au_hasard')
 except:
     print('Saisir correctement les parametres')
     exit(1)
