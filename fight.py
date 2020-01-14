@@ -39,6 +39,7 @@ def afficheTableau(tab,deb,fin):
 try :
     success = False
     r = recherche('https://fr.wikipedia.org/wiki/Les_Vacances_de_monsieur_Hulot')
+    print(len(r))
     tour = 0
     deb=1
     fin=21
@@ -54,14 +55,18 @@ try :
             # do retour
             i=0
         elif nvpage == 99:
-            if deb+20 > len(r):
-                deb = fin+1
-                fin += len(r)-fin
-            else:
-                deb+=20
-                fin+=20
+            if fin != len(r):
+                if fin+20 > len(r)-1:
+                    deb = fin
+                    fin = len(r)
+                else:
+                    deb+=20
+                    fin+=20
+
             afficheTableau(r,deb,fin)
         elif nvpage == 98:
+            # if fin == len(r):
+            #     deb -= (deb-len(r))
             if not deb==1 :
                 deb-=20
                 fin-=20
