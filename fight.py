@@ -41,9 +41,11 @@ try :
     r = recherche('https://fr.wikipedia.org/wiki/Les_Vacances_de_monsieur_Hulot')
     print(len(r))
     tour = 0
-    deb=1
-    fin=21
+    page=1
+    
     while not success:
+        deb = ((page-1)*20)+1
+        fin=deb+20
         print('************************ WikiGame **** tour {}'.format(tour))
         print('Actuellement : {}'.format(r[0]))
         print('00 - Retour /')
@@ -55,22 +57,9 @@ try :
             # do retour
             i=0
         elif nvpage == 99:
-            if fin != len(r):
-                if fin+20 > len(r)-1:
-                    deb = fin
-                    fin = len(r)
-                else:
-                    deb+=20
-                    fin+=20
-
-            afficheTableau(r,deb,fin)
+            page+=1
         elif nvpage == 98:
-            # if fin == len(r):
-            #     deb -= (deb-len(r))
-            if not deb==1 :
-                deb-=20
-                fin-=20
-            afficheTableau(r,deb,fin)
+            page-=1
         else:
             rn = recherche('https://fr.wikipedia.org/wiki/{}'.format(r[nvpage]))
             tour+=1
