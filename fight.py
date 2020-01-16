@@ -17,9 +17,13 @@ def recherche(arg): # Je crée la fonction
     with urllib.request.urlopen(arg) as response:
         webpage = response.read() #Crée une chaine de caractère avec tout le code source
         soup = BeautifulSoup(webpage, 'html.parser')
-        print(soup.title.string[0:len(soup.title.string)-12])
+        # print(soup.title.string[0:len(soup.title.string)-12])
         for toto in soup.find_all('h1', {"class":"firstHeading"}): #get the title of the page
             title = str(toto.contents[0])
+            # S'il y a des valeurs en exposants (ex:1er)
+            if 'abbr' in str(toto.contents[0]):
+                title = str(toto.contents[0].contents[0])+str(toto.contents[0].contents[1].contents[0])+str(toto.contents[1])
+
             title = title.replace("<i>", "").replace("</i>", "")
             links.append(title)
             
@@ -55,7 +59,7 @@ def afficheTableau(tab,deb,fin):
 
 try :
     success = False
-    r = recherche('https://fr.wikipedia.org/wiki/Ghiffa')
+    r = recherche('https://fr.wikipedia.org/wiki/Mai')
     origine = r[0]
     r2 = recherche('https://fr.wikipedia.org/wiki/Paris')
     tour = 0
