@@ -1,7 +1,11 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 # PG avec un param
 # forger une url : https://www.ecosia.org/search?q=batman
 # scrap la page et recup le nb de resultats id=resultStats
 # soup.find("div", {"id": "articlebody"})
+
+# TODO Gérer les titres avec des exposants
 
 from bs4 import BeautifulSoup
 import urllib.request
@@ -20,7 +24,7 @@ def recherche(arg): # Je crée la fonction
             
         for anchor in soup.find_all('div', {"class":"mw-parser-output"}):
             for toto in anchor.find_all('a'):
-                titi = str(toto.get('href')).replace("/wiki/","").replace("%27","'").replace("%C3%A8","è").replace("%C3%A9","é").replace('%C3%AA','ê').replace('%C3%A7','ç').replace('%C3%A0','à').replace('%C3%B4','ô').replace('%C3%89','É')
+                titi = str(toto.get('href')).replace("/wiki/","").replace("%27","'").replace("%C3%A8","è").replace("%C3%A9","é").replace('%C3%AA','ê').replace("%C3%B",'ü').replace('%C3%A7','ç').replace('%C3%A0','à').replace('%C3%B4','ô').replace('%C3%89','É')
                 if not ('/w/') in titi:
                     if not ('#') in titi:
                         if not ('Fichier') in titi:
@@ -45,6 +49,7 @@ try :
     r2 = recherche('https://fr.wikipedia.org/wiki/Sp%C3%A9cial:Page_au_hasard')
     tour = 0
     page=1
+    old="NULL"
     
     while not success:
         if r[0] == r2[0]:
@@ -63,7 +68,9 @@ try :
         print('99 - Voir la suite /')
         nvpage = int(input('Votre choix : '))
         if nvpage == 0:
-            r = recherche('https://fr.wikipedia.org/wiki/{}'.format(r[old]))
+            if old == "NULL":
+                print("Vous ne pouvez pas faire retour lors du premier tour")
+            r = recherche('https://fr.wikipedia.org/wiki/{}'.format(old))
             i=0
         elif nvpage == 99:
             if fin<len(r):
@@ -73,7 +80,8 @@ try :
                 page-=1
 
         else:
-            old = r[0]
+            # reformatage pour repasser dans l'URL
+            old = r[0].replace(" ","%20").replace("'","%27").replace("è","%C3%A8").replace("é","%C3%A9").replace('ê','%C3%AA').replace('ü',"%C3%B").replace('ç','%C3%A7').replace('à','%C3%A0').replace('ô','%C3%B4').replace('É','%C3%89')
             r = recherche('https://fr.wikipedia.org/wiki/{}'.format(r[nvpage]))
             tour+=1
         
@@ -82,6 +90,3 @@ try :
 except:
     print('Saisir correctement les parametres')
     exit(1)
-
-# print(r1)
-# print(r2)
