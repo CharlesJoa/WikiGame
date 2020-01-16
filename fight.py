@@ -5,11 +5,13 @@
 # scrap la page et recup le nb de resultats id=resultStats
 # soup.find("div", {"id": "articlebody"})
 
-# TODO Gérer les titres avec des exposants + Gerer le cas ou on saisit nvpage qui n'a pas d'élément a cet index
+# TODO Gérer les titres avec des exposants + Gerer le cas ou on saisit nvpage qui n'a pas d'élément a cet index + test le clear sur Linux
 
 from bs4 import BeautifulSoup
 import urllib.request
 import sys
+import os 
+
 
 
 def recherche(arg): # Je crée la fonction
@@ -42,6 +44,13 @@ def recherche(arg): # Je crée la fonction
                         
         return links
 
+def clears():
+    if 'win' in sys.platform:
+        os.system('cls')
+    else:
+        os.system('clear')
+
+
 # def getTitleURL(page):
 def formatage(arg):
     return arg.replace("%20"," ").replace("%27","'").replace("%C3%A8","è").replace("%C3%A9","é").replace('%C3%AA','ê').replace("%C3%A2","â").replace("%C5%93","œ").replace("%C3%B",'ü').replace("%C3%AC","ì").replace('%C3%A7','ç').replace('%C3%A0','à').replace('%C3%B4','ô').replace('%C3%89','É').replace("%C3%AF","ï")
@@ -58,6 +67,7 @@ def afficheTableau(tab,deb,fin):
         i+=1
 
 try :
+    
     success = False
     r = recherche('https://fr.wikipedia.org/wiki/Mai')
     origine = r[0]
@@ -67,7 +77,6 @@ try :
     old=""
     
     while not success:
-
         deb = ((page-1)*20)+1
         fin=deb+20
         print('************************ WikiGame **** tour {}'.format(tour))
@@ -102,6 +111,7 @@ try :
                 toto ='https://fr.wikipedia.org/wiki/{}'.format(formatageInverse(r[nvpage]))
                 r = recherche('https://fr.wikipedia.org/wiki/{}'.format(formatageInverse(r[nvpage])))
                 tour+=1
+                clears()
 
         if r[0] == r2[0]:
             success=True
