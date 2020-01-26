@@ -11,6 +11,9 @@ from bs4 import BeautifulSoup
 import urllib.request
 import sys
 import os 
+import pickle
+from random import randint
+
 
 
 
@@ -40,7 +43,8 @@ def recherche(arg): # Je crée la fonction
                                     if not ('Modèle:') in titi:
                                         if not ('/API') in titi:
                                             if not ('Spécial:') in titi:
-                                                links.append(titi.replace("/wiki/",""))
+                                                if not ('Catégorie:') in titi:
+                                                    links.append(titi.replace("/wiki/",""))
                         
         return links
 
@@ -66,12 +70,34 @@ def afficheTableau(tab,deb,fin):
 
         i+=1
 
+# Main()
+
 try :
     
     success = False
-    r = recherche('https://fr.wikipedia.org/wiki/Mai')
+    if len(sys.argv) == 1:
+        r = recherche('https://fr.wikipedia.org/wiki/Sp%C3%A9cial:Page_au_hasard')
+        r2 = recherche('https://fr.wikipedia.org/wiki/Sp%C3%A9cial:Page_au_hasard')
+    # Recherche par Portail
+    elif len(sys.argv) == 2:
+        if sys.argv[1] == '-p':
+            with open('donnees.txt', 'rb') as fichier:
+                mon_depickler = pickle.Unpickler(fichier)
+                tab_recupere = mon_depickler.load()
+            line_max = len(tab_recupere)
+            val1 = randint(0, line_max)
+            val2 = randint(0, line_max)
+            r = recherche('https://fr.wikipedia.org/wiki/{}'.format(tab_recupere[val1]))
+            r2 = recherche('https://fr.wikipedia.org/wiki/{}'.format(tab_recupere[val2]))
+    elif len(sys.argv) == 3:
+        # recherche specifique
+        if sys.argv[1] == '-s':
+            urls_to_search = sys.argv[2]
+            urls_to_search = urls_to_search.split('+')
+            r =recherche('https://fr.wikipedia.org/wiki/{}'.format(urls_to_search[0]))
+            r2 =recherche('https://fr.wikipedia.org/wiki/{}'.format(urls_to_search[1]))
+    
     origine = r[0]
-    r2 = recherche('https://fr.wikipedia.org/wiki/Paris')
     tour = 0
     page=1
     old=""
@@ -83,7 +109,7 @@ try :
         print('Départ :{}'.format(origine))
         print('Cible : {}'.format(r2[0]))
         print('Actuellement : {}'.format(r[0]))
-        print('00 - Retour /')
+        print('0 - Retour /')
         afficheTableau(r,max(1,deb),min(fin, len(r)))
         print('98 - Voir les liens précédents /')
         print('99 - Voir la suite /')
@@ -123,3 +149,4 @@ try :
 except:
     print('Saisir correctement les parametres')
     exit(1)
+
