@@ -24,6 +24,9 @@ On peut jouer de différentes façons :️
 ️
    python filler.py portail
    python wikigame.py -p 
+   
+4) Jeu en Interface graphique sur la branche nb:
+   python wikigame.py
 
 Exemple : 
 
